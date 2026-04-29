@@ -6,6 +6,7 @@ import RevenueChart from './RevenueChart';
 import SimulatorPanel from './SimulatorPanel';
 import SimResultPanel from './SimResultPanel';
 import FunnelPanel from './FunnelPanel';
+import ChatPanel from './ChatPanel';
 
 const IND_COLORS: Record<string, string> = {
   LN: '#2563eb', MN: '#6366f1', ERL: '#0ea5e9', PNS: '#2dd4bf',
@@ -52,6 +53,13 @@ export default function Dashboard() {
       console.error('Simulation failed:', e);
     }
     setSimLoading(false);
+  };
+
+  const handleApplySuggestion = (suggestion: { type: string; year: number; funnelChanges?: Record<string, Record<string, number>>; opexChanges?: { masterFtePct?: number } }) => {
+    // Re-fetch baseline to reflect changes (in a real app, this would update server state)
+    // For now, trigger a re-fetch to show the user the data refreshed
+    fetchBaseline();
+    console.log('Applied suggestion:', suggestion);
   };
 
   const currentRev = yearlyData[selectedYear]?.totalRevenue || 0;
@@ -147,6 +155,9 @@ export default function Dashboard() {
           </>
         )}
       </div>
+
+      {/* AI Chat Panel */}
+      <ChatPanel selectedYear={selectedYear} onApplySuggestion={handleApplySuggestion} />
     </div>
   );
 }
